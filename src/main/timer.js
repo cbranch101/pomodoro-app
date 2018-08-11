@@ -4,13 +4,10 @@ const getDeferred = () => {
         deferred.resolve = resolve
         deferred.reject = reject
     })
-    return {
-        ...deferred,
-        promise
-    }
+    return Object.assign({}, deferred, { promise })
 }
 
-export const getTimerHandler = onTick => {
+const getTimerHandler = onTick => {
     const timers = {}
     const stop = (timerName, isCompleted = false) => {
         const currentTimer = timers[timerName]
@@ -46,4 +43,8 @@ export const getTimerHandler = onTick => {
         start,
         stop
     }
+}
+
+module.exports = {
+    getTimerHandler
 }

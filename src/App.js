@@ -1,5 +1,6 @@
 import React, { Component } from "react"
 const { ipcRenderer } = window.require("electron")
+import { createApi } from "./client-api"
 import { Provider, Subscribe, Container } from "unstated"
 
 class MainMessageContainer extends Container {
@@ -16,6 +17,23 @@ class MainMessageContainer extends Container {
 }
 
 class App extends Component {
+    api = null
+    componentWillMount = () => {
+        const listenToChannel = onChannel =>
+            ipcRenderer.on("db-message", (event, message) => onChannel(message))
+        const sendMessage = message => ipcRenderer.send("db-message", message)
+        this.api = createApi(listenToChannel, sendMessage)
+    }
+    handleClick = () => {
+        this.api
+            .sendMessage({
+                name: "testQuery",
+                payload: {
+                    count: 5
+                }
+            })
+            .then(response => console.log(response))
+    }
     render() {
         return (
             <Provider>
@@ -29,6 +47,7 @@ class App extends Component {
                                 <p className="App-intro">
                                     Current message {mainMessage.state.message}
                                 </p>
+                                <button onClick={this.handleClick}>Message</button>
                             </div>
                         )
                     }}

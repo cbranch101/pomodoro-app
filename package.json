@@ -43,7 +43,7 @@
         "rxjs": "^6.2.2",
         "semver": "^5.4.1",
         "unstated": "^2.1.1",
-        "uuid": "^3.1.0",
+        "uuid": "^3.3.2",
         "wait-on": "^2.0.2"
     },
     "homepage": "./",
@@ -59,7 +59,7 @@
         "win-pack": "build --em.main=build/electron.js --win",
         "check-codesign": "codesign --verify --verbose --deep --strict dist/mac/Scribe.app",
         "preelectron-pack": "npm run build",
-        "electron": "electron .",
+        "electron": "electron --js-flags=\"--harmony\" .",
         "start": "concurrently \"BROWSER=none yarn start-react\" \"wait-on http://localhost:3000 && electron . --dev\"",
         "dist": "npm run build && build",
         "pack": "build --dir",

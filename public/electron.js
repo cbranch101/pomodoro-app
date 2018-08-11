@@ -1,10 +1,10 @@
 const electron = require("electron")
-const { app } = electron
+const { app, ipcMain } = electron
 const { autoUpdater } = require("electron-updater")
 const isDev = require("electron-is-dev")
 const path = require("path")
 require("dotenv").config()
-const { testFunction } = require("../src/main/test-file.js")
+const { getTimerHandler } = require("../src/main/timer.js")
 
 const BrowserWindow = electron.BrowserWindow
 
@@ -15,7 +15,6 @@ let mainWindow
 function createWindow() {
     // Check for software updates
     autoUpdater.checkForUpdates()
-    testFunction().then(val => console.log(val))
     // Create the browser window.
     mainWindow = new BrowserWindow({
         titleBarStyle: "hidden",
@@ -28,9 +27,16 @@ function createWindow() {
         show: false
     })
 
-    // ipcMain.on("render-message", (event, arg) => {
-    //     console.log(arg)
-    // })
+    ipcMain.on("db-message", (event, message) => {
+\        setTimeout(() => {
+            mainWindow.webContents.send("db-message", {
+                name: message.name,
+                payload: {
+                    count: message.payload.count + 20
+                }
+            })
+        }, 1000)
+    })
 
     const {
         default: installExtension,
