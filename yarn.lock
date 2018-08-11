@@ -6919,6 +6919,12 @@ rxjs@^5.0.0-beta.12:
   dependencies:
     symbol-observable "1.0.1"
 
+rxjs@^6.2.2:
+  version "6.2.2"
+  resolved "http://rbcplatform.artifactoryonline.com/rbcplatform/api/npm/npm-virtual/rxjs/-/rxjs-6.2.2.tgz#eb75fa3c186ff5289907d06483a77884586e1cf9"
+  dependencies:
+    tslib "^1.9.0"
+
 safe-buffer@5.1.1:
   version "5.1.1"
   resolved "http://rbcplatform.artifactoryonline.com/rbcplatform/api/npm/npm-virtual/safe-buffer/-/safe-buffer-5.1.1.tgz#893312af69b2123def71f57889001671eeb2c853"
@@ -7698,6 +7704,10 @@ truncate-utf8-bytes@^1.0.0:
   dependencies:
     utf8-byte-length "^1.0.1"
 
+tslib@^1.9.0:
+  version "1.9.3"
+  resolved "http://rbcplatform.artifactoryonline.com/rbcplatform/api/npm/npm-virtual/tslib/-/tslib-1.9.3.tgz#d7e4dd79245d85428c4d7e4822a79917954ca286"
+
 tty-browserify@0.0.0:
   version "0.0.0"
   resolved "http://rbcplatform.artifactoryonline.com/rbcplatform/api/npm/npm-virtual/tty-browserify/-/tty-browserify-0.0.0.tgz#a157ba402da24e9bf957f9aa69d524eed42901a6"
@@ -7934,6 +7944,10 @@ utils-merge@1.0.1:
 uuid@^3.0.0, uuid@^3.0.1, uuid@^3.1.0:
   version "3.3.2"
   resolved "http://rbcplatform.artifactoryonline.com/rbcplatform/api/npm/npm-virtual/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
+
+uuid@^3.3.2:
+  version "3.3.2"
+  resolved "https://rbcplatform.jfrog.io/rbcplatform/api/npm/npm-virtual/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
 
 validate-npm-package-license@^3.0.1:
   version "3.0.3"

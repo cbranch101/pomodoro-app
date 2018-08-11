@@ -1,0 +1,12 @@
+exports[`timer all timer should be stoppable, and it should be possible to have multiple timers running at once 1`] = `
+Array [
+  Object {
+    "count": 1,
+    "isCompleted": false,
+  },
+  Object {
+    "count": 2,
+    "isCompleted": true,
+  },
+]
+`;
