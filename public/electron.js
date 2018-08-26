@@ -1,16 +1,18 @@
 const electron = require("electron")
-const { app, ipcMain } = electron
+const { app, ipcMain, Tray, nativeImage } = electron
 const { autoUpdater } = require("electron-updater")
 const isDev = require("electron-is-dev")
 const path = require("path")
 require("dotenv").config()
-const { getTimerHandler } = require("../src/main/timer.js")
+const { getTimerHandler } = require("./timer.js")
+const { updateTrayIconWithSecondsRemaining, emptyTrayIcon } = require("./tray-icon.js")
 
 const BrowserWindow = electron.BrowserWindow
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
+let trayIcon
 
 function createWindow() {
     // Check for software updates
@@ -27,15 +29,35 @@ function createWindow() {
         show: false
     })
 
-    ipcMain.on("db-message", (event, message) => {
-\        setTimeout(() => {
-            mainWindow.webContents.send("db-message", {
-                name: message.name,
-                payload: {
-                    count: message.payload.count + 20
-                }
+    const timerHandler = getTimerHandler((timerName, { remaining: secondsRemaining }) => {
+        updateTrayIconWithSecondsRemaining(trayIcon, secondsRemaining)
+    })
+
+    ipcMain.on("timer-message", (event, message) => {
+        if (message.name === "startPom") {
+            timerHandler.startFor("pom", 10).then(response => {
+                emptyTrayIcon(trayIcon)
+                mainWindow.webContents.send("timer-message", {
+                    name: "startPom",
+                    payload: response
+                })
             })
-        }, 1000)
+        }
+        if (message.name === "startBreak") {
+            timerHandler.startFor("break", 5).then(response => {
+                emptyTrayIcon(trayIcon)
+                mainWindow.webContents.send("timer-message", {
+                    name: "startBreak",
+                    payload: response
+                })
+            })
+        }
+        if (message.name === "stopPom") {
+            timerHandler.stop("pom")
+        }
+        if (message.name === "stopBreak") {
+            timerHandler.stop("break")
+        }
     })
 
     const {
@@ -57,6 +79,14 @@ function createWindow() {
     // installExtension(REACT_DEVELOPER_TOOLS)
     // .then(name => console.log(`Added Extension:  ${name}`))
     // .catch(err => console.log("An error occurred: ", err));
+
+    let trayImage = nativeImage.createFromPath(
+        path.join(__dirname, "../public/assets/icons/tray-icon.png")
+    )
+
+    trayImage = trayImage.resize({ width: 16, height: 16 })
+
+    trayIcon = new Tray(trayImage)
 
     mainWindow.once("ready-to-show", () => {
         mainWindow.show()
