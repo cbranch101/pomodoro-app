@@ -19,6 +19,7 @@ assets
 npm-debug.log
 
 .idea
+*.tgz
 
 # inspiration
 inspiration

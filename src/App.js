@@ -1,53 +1,26 @@
 import React, { Component } from "react"
-const { ipcRenderer } = window.require("electron")
-import { createApi } from "./client-api"
-import { Provider, Subscribe, Container } from "unstated"
-
-class MainMessageContainer extends Container {
-    constructor(props) {
-        super(props)
-        ipcRenderer.on("test-message", (event, message) => {
-            this.setState({ message })
-        })
-    }
-
-    state = {
-        message: null
-    }
-}
+import { Provider, Subscribe } from "unstated"
+import Timer from "./stateContainers/Timer"
 
 class App extends Component {
-    api = null
-    componentWillMount = () => {
-        const listenToChannel = onChannel =>
-            ipcRenderer.on("db-message", (event, message) => onChannel(message))
-        const sendMessage = message => ipcRenderer.send("db-message", message)
-        this.api = createApi(listenToChannel, sendMessage)
-    }
-    handleClick = () => {
-        this.api
-            .sendMessage({
-                name: "testQuery",
-                payload: {
-                    count: 5
-                }
-            })
-            .then(response => console.log(response))
-    }
     render() {
         return (
             <Provider>
-                <Subscribe to={[MainMessageContainer]}>
-                    {mainMessage => {
+                <Subscribe to={[Timer]}>
+                    {timer => {
+                        const { status } = timer.state
+                        const { startPom, startBreak, stop } = timer
+                        const waitingToStartPom = status === "WAITING_TO_START_POM"
                         return (
-                            <div className="App">
-                                <header className="App-header">
-                                    <h1 className="App-title">Welcome to React</h1>
-                                </header>
-                                <p className="App-intro">
-                                    Current message {mainMessage.state.message}
-                                </p>
-                                <button onClick={this.handleClick}>Message</button>
+                            <div>
+                                <p>Current message {status}</p>
+                                {status === "IN_POM" || status === "IN_BREAK" ? (
+                                    <button onClick={stop}>Stop</button>
+                                ) : (
+                                    <button onClick={waitingToStartPom ? startPom : startBreak}>
+                                        Start {waitingToStartPom ? "Pom" : "Break"}
+                                    </button>
+                                )}
                             </div>
                         )
                     }}

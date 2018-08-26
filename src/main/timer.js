@@ -18,18 +18,19 @@ const getTimerHandler = onTick => {
             delete timers[timerName]
         }
     }
-    const getTick = (timerName, stopFunc) => () => {
+    const getTick = (timerName, stopFunc, getReturnValue) => () => {
         const timer = timers[timerName]
         const { count } = timer
         const newCount = count + 1
         timers[timerName].count = newCount
-        onTick(timerName, newCount)
+        const returnValue = getReturnValue ? getReturnValue(newCount) : newCount
+        onTick(timerName, returnValue)
         if (stopFunc && stopFunc(newCount)) {
             stop(timerName, true)
         }
     }
-    const start = (timerName, stopFunc) => {
-        const timer = setInterval(getTick(timerName, stopFunc), 1000)
+    const start = (timerName, stopFunc, getReturnValue) => {
+        const timer = setInterval(getTick(timerName, stopFunc, getReturnValue), 1000)
         const deferred = getDeferred()
         timers[timerName] = {
             deferred,
@@ -39,7 +40,15 @@ const getTimerHandler = onTick => {
         return deferred.promise
     }
     return {
-        startFor: (timerName, duration) => start(timerName, count => count === duration),
+        startFor: (timerName, duration) =>
+            start(
+                timerName,
+                count => count === duration,
+                count => ({
+                    current: count,
+                    remaining: duration - count
+                })
+            ),
         start,
         stop
     }
