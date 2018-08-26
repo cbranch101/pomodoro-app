@@ -80,9 +80,7 @@ function createWindow() {
     // .then(name => console.log(`Added Extension:  ${name}`))
     // .catch(err => console.log("An error occurred: ", err));
 
-    let trayImage = nativeImage.createFromPath(
-        path.join(__dirname, "../public/assets/icons/tray-icon.png")
-    )
+    let trayImage = nativeImage.createFromPath(path.join(__dirname, "/tray-icon.png"))
 
     trayImage = trayImage.resize({ width: 16, height: 16 })
 

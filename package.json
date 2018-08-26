@@ -47,7 +47,7 @@
         "wait-on": "^2.0.2"
     },
     "homepage": "./",
-    "main": "public/electron.js",
+    "main": "src/main/electron.js",
     "scripts": {
         "start-react": "react-scripts start",
         "build": "react-scripts build",
@@ -69,7 +69,14 @@
         "files": [
             "build/**/*",
             "node_modules/**/*",
-            "!build-scripts${/*}"
+            "!build-scripts${/*}",
+            {
+                "from": "src/main",
+                "to": "build",
+                "filter": [
+                    "**/*"
+                ]
+            }
         ],
         "forceCodeSigning": false,
         "directories": {
