@@ -1,4 +1,4 @@
-import { createApi } from "./client-api"
+import { createApi } from "./render-main-api"
 
 const getMessageHandler = () => {
     let onChannel
@@ -16,7 +16,7 @@ const getMessageHandler = () => {
 
 const messageHandler = getMessageHandler()
 
-describe("clientApi", () => {
+describe("renderMainApi", () => {
     test("should generate a promise based on the channel", done => {
         const sendMessageToMain = jest.fn()
         const api = createApi(messageHandler.listen, sendMessageToMain)

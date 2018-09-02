@@ -1,28 +1,21 @@
 import React, { Component } from "react"
 import { Provider, Subscribe } from "unstated"
-import Timer from "./stateContainers/Timer"
+
+import Router from "./stateContainers/Router"
+import ActivePom from "./components/ActivePom"
+import TaskList from "./components/TaskList"
 
 class App extends Component {
     render() {
         return (
             <Provider>
-                <Subscribe to={[Timer]}>
-                    {timer => {
-                        const { status } = timer.state
-                        const { startPom, startBreak, stop } = timer
-                        const waitingToStartPom = status === "WAITING_TO_START_POM"
-                        return (
-                            <div>
-                                <p>Current message {status}</p>
-                                {status === "IN_POM" || status === "IN_BREAK" ? (
-                                    <button onClick={stop}>Stop</button>
-                                ) : (
-                                    <button onClick={waitingToStartPom ? startPom : startBreak}>
-                                        Start {waitingToStartPom ? "Pom" : "Break"}
-                                    </button>
-                                )}
-                            </div>
-                        )
+                <Subscribe to={[Router]}>
+                    {router => {
+                        const { location } = router.state
+                        if (location === "taskList") return <TaskList navigate={router.navigate} />
+                        if (location === "activePom")
+                            return <ActivePom navigate={router.navigate} />
+                        return null
                     }}
                 </Subscribe>
             </Provider>

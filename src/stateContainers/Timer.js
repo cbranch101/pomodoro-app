@@ -1,11 +1,11 @@
 import { Container } from "unstated"
-import { createApi } from "../client-api"
-const { ipcRenderer } = window.require("electron")
+import { createApi } from "../render-main-api"
 
 class Timer extends Container {
     api = null
     constructor(props) {
         super(props)
+        const { ipcRenderer } = window.require("electron")
         const listenToChannel = onChannel =>
             ipcRenderer.on("timer-message", (event, message) => onChannel(message))
         const sendMessage = message => ipcRenderer.send("timer-message", message)
