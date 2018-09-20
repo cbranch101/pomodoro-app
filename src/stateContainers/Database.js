@@ -7,6 +7,12 @@ const tasks = [
         name: "Build this app",
         estimatedPoms: 3,
         completed: false
+    },
+    {
+        id: "two",
+        name: "A Second one",
+        estimatedPoms: 3,
+        completed: false
     }
 ]
 const api = {
@@ -18,6 +24,7 @@ class Database extends Container {
     constructor(props) {
         super(props)
         this.api = api
+        this.fetchTasks()
     }
 
     modifyDataKey = (key, reducer) => {
@@ -36,7 +43,33 @@ class Database extends Container {
         this.modifyDataKey(key, { data, loading: false })
     }
 
+    update = async (key, id, fields) => {
+        const updatedItem = await api[key].update(id, fields)
+        this.modifyDataKey(key, state => {
+            const updatedItems = state.data.map(
+                item => (item.id === updatedItem.id ? updatedItem : item)
+            )
+            return {
+                ...state,
+                data: updatedItems
+            }
+        })
+    }
+
+    insert = async (key, newItem) => {
+        const createdItem = await api[key].insert(newItem)
+        this.modifyDataKey(key, state => {
+            const updatedItems = [createdItem, ...state.data]
+            return {
+                ...state,
+                data: updatedItems
+            }
+        })
+    }
+
     fetchTasks = () => this.fetch("tasks")
+    updateTask = (id, fields) => this.update("tasks", id, fields)
+    insertTask = newItem => this.insert("tasks", newItem)
 
     state = {
         tasks: {
