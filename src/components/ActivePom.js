@@ -3,7 +3,7 @@ import PropTypes from "prop-types"
 import { Subscribe } from "unstated"
 import Timer from "../stateContainers/Timer"
 
-const ActivePom = ({ navigate }) => {
+const ActivePom = ({ task, backToTaskList }) => {
     return (
         <Subscribe to={[Timer]}>
             {timer => {
@@ -12,7 +12,7 @@ const ActivePom = ({ navigate }) => {
                 const waitingToStartPom = status === "WAITING_TO_START_POM"
                 return (
                     <div>
-                        <p>Current message {status}</p>
+                        <p>{task.name}</p>
                         {status === "IN_POM" || status === "IN_BREAK" ? (
                             <button onClick={stop}>Stop</button>
                         ) : (
@@ -20,7 +20,7 @@ const ActivePom = ({ navigate }) => {
                                 Start {waitingToStartPom ? "Pom" : "Break"}
                             </button>
                         )}
-                        <button onClick={() => navigate("taskList")}>Go To Task List</button>
+                        <button onClick={backToTaskList}>Go To Task List</button>
                     </div>
                 )
             }}
@@ -29,7 +29,10 @@ const ActivePom = ({ navigate }) => {
 }
 
 ActivePom.propTypes = {
-    navigate: PropTypes.func.isRequired
+    task: PropTypes.shape({
+        name: PropTypes.string.isRequired
+    }),
+    backToTaskList: PropTypes.func.isRequired
 }
 
 export default ActivePom

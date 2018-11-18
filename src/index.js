@@ -1,19 +1,24 @@
 import React from "react"
 import ReactDOM from "react-dom"
-// import { loadDatabase } from "./api"
+import { Provider } from "unstated"
+import { createApi } from "./render-main-api"
 
 import App from "./App"
+import Timer from "./stateContainers/Timer"
 
-// const testDatabase = async () => {
-//     const db = await loadDatabase()
-//     const records = await db.find({})
-//     console.log(records)
-// }
+const { ipcRenderer } = window.require("electron")
+const listenToChannel = onChannel =>
+    ipcRenderer.on("timer-message", (event, message) => onChannel(message))
+const sendMessage = message => ipcRenderer.send("timer-message", message)
+const api = createApi(listenToChannel, sendMessage)
 
-// setTimeout(() => {
-//     console.log("sending message")
-//     ipcRenderer.send("render-message", { render: "message" })
-// }, 3000)
+const timer = new Timer({
+    api
+})
 
-// testDatabase()
-ReactDOM.render(<App />, document.getElementById("root"))
+ReactDOM.render(
+    <Provider inject={[timer]}>
+        <App />
+    </Provider>,
+    document.getElementById("root")
+)

@@ -31,6 +31,7 @@ class TaskList extends React.Component {
         return (
             <TaskListData
                 render={({ tasks, updateTask, insertTask }) => {
+                    const { startTask } = this.props
                     const { editedItemId } = this.state
                     const tasksWithNewItem =
                         editedItemId === "new_item"
@@ -45,6 +46,7 @@ class TaskList extends React.Component {
                                     <TaskListItem
                                         key={task.id}
                                         editing={task.id === this.state.editedItemId}
+                                        startTask={startTask}
                                         edit={this.startEditingItem}
                                         save={(id, fields) => {
                                             this.stopEditingItem()
@@ -65,7 +67,7 @@ class TaskList extends React.Component {
 }
 
 TaskList.propTypes = {
-    navigate: PropTypes.func.isRequired
+    startTask: PropTypes.func.isRequired
 }
 
 export default TaskList

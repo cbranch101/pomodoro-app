@@ -1,24 +1,41 @@
 import React, { Component } from "react"
-import { Provider, Subscribe } from "unstated"
+import { Subscribe } from "unstated"
 
-import Router from "./stateContainers/Router"
 import ActivePom from "./components/ActivePom"
+import Task from "./stateContainers/Task"
 import TaskList from "./components/TaskList"
+import TaskListData from "./components/TaskListData"
 
 class App extends Component {
     render() {
         return (
-            <Provider>
-                <Subscribe to={[Router]}>
-                    {router => {
-                        const { location } = router.state
-                        if (location === "taskList") return <TaskList navigate={router.navigate} />
-                        if (location === "activePom")
-                            return <ActivePom navigate={router.navigate} />
-                        return null
-                    }}
-                </Subscribe>
-            </Provider>
+            <TaskListData
+                render={({ tasks, updateTask, insertTask }) => {
+                    return (
+                        <Subscribe to={[Task]}>
+                            {task => {
+                                const {
+                                    startWorking: startTask,
+                                    stopWorking,
+                                    state: { workedOnTask }
+                                } = task
+                                if (workedOnTask) {
+                                    const task = tasks.find(task => task.id === workedOnTask)
+                                    return <ActivePom task={task} backToTaskList={stopWorking} />
+                                }
+                                return (
+                                    <TaskList
+                                        startTask={startTask}
+                                        tasks={tasks}
+                                        updateTask={updateTask}
+                                        insertTask={insertTask}
+                                    />
+                                )
+                            }}
+                        </Subscribe>
+                    )
+                }}
+            />
         )
     }
 }

@@ -59,7 +59,7 @@ class TaskListItem extends React.Component {
     }
 
     render() {
-        const { task: baseTask, edit, editing } = this.props
+        const { task: baseTask, edit, editing, startTask } = this.props
         const task = {
             ...baseTask,
             ...this.state.editedTask
@@ -106,7 +106,7 @@ class TaskListItem extends React.Component {
                 <ActionButton onClick={() => (editing ? this.handleSave() : edit(task.id))}>
                     {editing ? "Save" : "Edit"}
                 </ActionButton>
-                <ActionButton>Start</ActionButton>
+                <ActionButton onClick={() => startTask(task.id)}>Start</ActionButton>
             </ListItem>
         )
     }
@@ -115,6 +115,7 @@ class TaskListItem extends React.Component {
 TaskListItem.propTypes = {
     edit: PropTypes.func.isRequired,
     save: PropTypes.func.isRequired,
+    startTask: PropTypes.func.isRequired,
     editing: PropTypes.bool.isRequired,
     task: PropTypes.shape({
         id: PropTypes.string.isRequired,
