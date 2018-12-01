@@ -14,35 +14,26 @@ const getDataToSet = data => {
     if (!Array.isArray(data)) {
         return data
     }
-    return data.reduce(
-        (dataToSet, item) => ({
-            ...dataToSet,
-            [item.id]: item
-        }),
-        {}
-    )
+
+    return data.reduce((dataToSet, item) => {
+        return Object.assign({}, dataToSet, { [item.id]: item })
+    }, {})
 }
 
-export default data => {
+const getMockCollection = data => {
     const dbChance = new Chance("test")
     const getId = () => dbChance.guid()
     const store = getDataToSet(data)
     return {
         insert: wrapMethod(item => {
             const id = getId()
-            const newItem = {
-                ...item,
-                id
-            }
+            const newItem = Object.assign({}, item, { id })
             store[id] = newItem
             return newItem
         }),
         update: wrapMethod((id, fields) => {
             const oldItem = store[id]
-            const updatedItem = {
-                ...oldItem,
-                ...fields
-            }
+            const updatedItem = Object.assign({}, oldItem, fields)
             store[id] = updatedItem
             return updatedItem
         }),
@@ -59,4 +50,8 @@ export default data => {
         }),
         findById: wrapMethod(id => store[id])
     }
+}
+
+module.exports = {
+    getMockCollection
 }

@@ -1,13 +1,18 @@
 const { getMessageMap: getTimerMessageMap } = require("./timer.js")
+const { getCollections, getMessageHandler: getDatabaseMessageHandler } = require("./database.js")
 
-const getMessageHandler = ({ trayIcon, sendResponse }) => (
-    event,
-    { name: messageName, payload: messagePayload }
-) => {
+const getMessageHandler = ({ trayIcon, sendResponse }) => {
     const timerMessageMap = getTimerMessageMap({ trayIcon, sendResponse })
-    const { type, payload } = messagePayload
-    if (messageName === "timer") {
-        timerMessageMap[type](payload)
+    const collections = getCollections()
+    const databaseMessageHandler = getDatabaseMessageHandler({ collections, sendResponse })
+    return (event, { name: messageName, payload: messagePayload }) => {
+        const { type, payload } = messagePayload
+        if (messageName === "timer") {
+            return timerMessageMap[type](payload)
+        }
+        if (messageName === "database") {
+            return databaseMessageHandler(type, payload)
+        }
     }
 }
 

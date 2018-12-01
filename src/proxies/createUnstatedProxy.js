@@ -1,7 +1,8 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
 import { Provider } from "unstated"
-import Timer from "../stateContainers/Timer"
+import getContainers from "../get-containers"
+
 import { getMessageHandler } from "../main/messages"
 import { createApi } from "../render-main-api"
 
@@ -32,9 +33,8 @@ export default () => {
         }
         render() {
             const { value: NextProxy, next } = this.props.nextProxy
-            const timer = new Timer({ api: this.api })
             return (
-                <Provider inject={[timer]}>
+                <Provider inject={getContainers(this.api)}>
                     <NextProxy {...this.props} nextProxy={next()} />
                 </Provider>
             )

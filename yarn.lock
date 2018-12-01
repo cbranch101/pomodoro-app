@@ -1029,7 +1029,7 @@ babel-plugin-transform-es2015-unicode-regex@^6.3.13:
     babel-runtime "^6.22.0"
     regexpu-core "^2.0.0"
 
-babel-plugin-transform-exponentiation-operator@^6.24.1, babel-plugin-transform-exponentiation-operator@^6.8.0:
+babel-plugin-transform-exponentiation-operator@^6.8.0:
   version "6.24.1"
   resolved "http://rbcplatform.artifactoryonline.com/rbcplatform/api/npm/npm-virtual/babel-plugin-transform-exponentiation-operator/-/babel-plugin-transform-exponentiation-operator-6.24.1.tgz#2ab0c9c7f3098fa48907772bb813fe41e8de3a0e"
   dependencies:
@@ -1118,14 +1118,6 @@ babel-plugin-transform-strict-mode@^6.24.1:
     babel-runtime "^6.22.0"
     babel-types "^6.24.1"
 
-babel-polyfill@^6.26.0:
-  version "6.26.0"
-  resolved "https://rbcplatform.artifactoryonline.com/rbcplatform/api/npm/npm-virtual/babel-polyfill/-/babel-polyfill-6.26.0.tgz#379937abc67d7895970adc621f284cd966cf2153"
-  dependencies:
-    babel-runtime "^6.26.0"
-    core-js "^2.5.0"
-    regenerator-runtime "^0.10.5"
-
 babel-preset-env@1.2.1:
   version "1.2.1"
   resolved "http://rbcplatform.artifactoryonline.com/rbcplatform/api/npm/npm-virtual/babel-preset-env/-/babel-preset-env-1.2.1.tgz#659178f54df74a74765f796be4d290b5beeb3f5f"
@@ -1160,12 +1152,6 @@ babel-preset-env@1.2.1:
     browserslist "^1.4.0"
     electron-to-chromium "^1.1.0"
     invariant "^2.2.2"
-
-babel-preset-es2016@^6.24.1:
-  version "6.24.1"
-  resolved "https://rbcplatform.artifactoryonline.com/rbcplatform/api/npm/npm-virtual/babel-preset-es2016/-/babel-preset-es2016-6.24.1.tgz#f900bf93e2ebc0d276df9b8ab59724ebfd959f8b"
-  dependencies:
-    babel-plugin-transform-exponentiation-operator "^6.24.1"
 
 babel-preset-jest@^17.0.2:
   version "17.0.2"
@@ -1716,10 +1702,6 @@ chalk@^2.0.0, chalk@^2.0.1, chalk@^2.1.0, chalk@^2.3.0, chalk@^2.4.1:
     ansi-styles "^3.2.1"
     escape-string-regexp "^1.0.5"
     supports-color "^5.3.0"
-
-chance@^1.0.12:
-  version "1.0.17"
-  resolved "https://rbcplatform.artifactoryonline.com/rbcplatform/api/npm/npm-virtual/chance/-/chance-1.0.17.tgz#3d67f1bd60d1a14de90e36a625920543707c6538"
 
 chance@^1.0.16:
   version "1.0.16"
@@ -3983,16 +3965,6 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.2, graceful-fs@^4.1.3, graceful-fs@^4.1.6,
   version "1.0.1"
   resolved "http://rbcplatform.artifactoryonline.com/rbcplatform/api/npm/npm-virtual/graceful-readlink/-/graceful-readlink-1.0.1.tgz#4cafad76bc62f02fa039b2f94e9a3dd3a391a725"
 
-graphql-relay@^0.5.4:
-  version "0.5.5"
-  resolved "https://rbcplatform.artifactoryonline.com/rbcplatform/api/npm/npm-virtual/graphql-relay/-/graphql-relay-0.5.5.tgz#d6815e6edd618e878d5d921c13fc66033ec867e2"
-
-graphql@0.12.3:
-  version "0.12.3"
-  resolved "https://rbcplatform.artifactoryonline.com/rbcplatform/api/npm/npm-virtual/graphql/-/graphql-0.12.3.tgz#11668458bbe28261c0dcb6e265f515ba79f6ce07"
-  dependencies:
-    iterall "1.1.3"
-
 growly@^1.2.0:
   version "1.3.0"
   resolved "http://rbcplatform.artifactoryonline.com/rbcplatform/api/npm/npm-virtual/growly/-/growly-1.3.0.tgz#f10748cbe76af964b7c96c93c6bcc28af120c081"
@@ -4884,10 +4856,6 @@ istanbul@^0.4.5:
 items@2.x.x:
   version "2.1.1"
   resolved "http://rbcplatform.artifactoryonline.com/rbcplatform/api/npm/npm-virtual/items/-/items-2.1.1.tgz#8bd16d9c83b19529de5aea321acaada78364a198"
-
-iterall@1.1.3:
-  version "1.1.3"
-  resolved "https://rbcplatform.artifactoryonline.com/rbcplatform/api/npm/npm-virtual/iterall/-/iterall-1.1.3.tgz#1cbbff96204056dde6656e2ed2e2226d0e6d72c9"
 
 jest-changed-files@^17.0.2:
   version "17.0.2"
@@ -5815,17 +5783,6 @@ mksnapshot@^0.3.0:
     decompress-zip "0.3.0"
     fs-extra "0.26.7"
     request "^2.79.0"
-
-mock-relay-server@0.1.4:
-  version "0.1.4"
-  resolved "https://rbcplatform.artifactoryonline.com/rbcplatform/api/npm/npm-virtual/mock-relay-server/-/mock-relay-server-0.1.4.tgz#81a5b9536067180c7b6b4ede44951de4c7935601"
-  dependencies:
-    babel-polyfill "^6.26.0"
-    babel-preset-es2016 "^6.24.1"
-    chance "^1.0.12"
-    graphql "0.12.3"
-    graphql-relay "^0.5.4"
-    lodash "^4.17.4"
 
 modify-filename@^1.1.0:
   version "1.1.0"
@@ -7440,7 +7397,7 @@ regenerate@^1.2.1:
   version "1.4.0"
   resolved "http://rbcplatform.artifactoryonline.com/rbcplatform/api/npm/npm-virtual/regenerate/-/regenerate-1.4.0.tgz#4a856ec4b56e4077c557589cae85e7a4c8869a11"
 
-regenerator-runtime@^0.10.0, regenerator-runtime@^0.10.5:
+regenerator-runtime@^0.10.0:
   version "0.10.5"
   resolved "http://rbcplatform.artifactoryonline.com/rbcplatform/api/npm/npm-virtual/regenerator-runtime/-/regenerator-runtime-0.10.5.tgz#336c3efc1220adcedda2c9fab67b5a7955a33658"
 
