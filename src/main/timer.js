@@ -1,3 +1,5 @@
+const { updateTrayIconWithSecondsRemaining, emptyTrayIcon } = require("./tray-icon.js")
+
 const getDeferred = () => {
     const deferred = {}
     const promise = new Promise((resolve, reject) => {
@@ -54,6 +56,48 @@ const getTimerHandler = onTick => {
     }
 }
 
+const getMessageMap = ({ trayIcon, sendResponse }) => {
+    const timerHandler = getTimerHandler((timerName, { remaining: secondsRemaining }) => {
+        updateTrayIconWithSecondsRemaining(trayIcon, secondsRemaining)
+    })
+
+    const sendTimerResponse = ({ type, payload }) =>
+        sendResponse({
+            name: "timer",
+            payload: {
+                type,
+                payload
+            }
+        })
+    return {
+        startPom: () => {
+            timerHandler.startFor("pom", 10).then(response => {
+                emptyTrayIcon(trayIcon)
+                sendTimerResponse({
+                    type: "startPom",
+                    payload: response
+                })
+            })
+        },
+        startBreak: () => {
+            timerHandler.startFor("break", 5).then(response => {
+                emptyTrayIcon(trayIcon)
+                sendTimerResponse({
+                    type: "startBreak",
+                    payload: response
+                })
+            })
+        },
+        stopPom: () => {
+            timerHandler.stop("pom")
+        },
+        stopBreak: () => {
+            timerHandler.stop("break")
+        }
+    }
+}
+
 module.exports = {
-    getTimerHandler
+    getTimerHandler,
+    getMessageMap
 }

@@ -4,9 +4,8 @@ const { autoUpdater } = require("electron-updater")
 const isDev = require("electron-is-dev")
 const path = require("path")
 require("dotenv").config()
-const { getTimerHandler } = require("./timer.js")
-const { updateTrayIconWithSecondsRemaining, emptyTrayIcon } = require("./tray-icon.js")
-
+const { getMessageHandler } = require("./messages.js")
+const TIMER_CHANNEL = "timer-message"
 const BrowserWindow = electron.BrowserWindow
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -27,37 +26,6 @@ function createWindow() {
             webSecurity: false
         },
         show: false
-    })
-
-    const timerHandler = getTimerHandler((timerName, { remaining: secondsRemaining }) => {
-        updateTrayIconWithSecondsRemaining(trayIcon, secondsRemaining)
-    })
-
-    ipcMain.on("timer-message", (event, message) => {
-        if (message.name === "startPom") {
-            timerHandler.startFor("pom", 10).then(response => {
-                emptyTrayIcon(trayIcon)
-                mainWindow.webContents.send("timer-message", {
-                    name: "startPom",
-                    payload: response
-                })
-            })
-        }
-        if (message.name === "startBreak") {
-            timerHandler.startFor("break", 5).then(response => {
-                emptyTrayIcon(trayIcon)
-                mainWindow.webContents.send("timer-message", {
-                    name: "startBreak",
-                    payload: response
-                })
-            })
-        }
-        if (message.name === "stopPom") {
-            timerHandler.stop("pom")
-        }
-        if (message.name === "stopBreak") {
-            timerHandler.stop("break")
-        }
     })
 
     const {
@@ -85,6 +53,13 @@ function createWindow() {
     trayImage = trayImage.resize({ width: 16, height: 16 })
 
     trayIcon = new Tray(trayImage)
+
+    const messageHandler = getMessageHandler({
+        trayIcon,
+        sendResponse: contents => mainWindow.webContents.send(TIMER_CHANNEL, contents)
+    })
+
+    ipcMain.on(TIMER_CHANNEL, messageHandler)
 
     mainWindow.once("ready-to-show", () => {
         mainWindow.show()
