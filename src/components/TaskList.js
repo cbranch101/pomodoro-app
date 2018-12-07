@@ -48,6 +48,7 @@ class TaskList extends React.Component {
                                         editing={task.id === this.state.editedItemId}
                                         startTask={startTask}
                                         edit={this.startEditingItem}
+                                        canEdit={task.poms.length === 0}
                                         save={(id, fields) => {
                                             this.stopEditingItem()
                                             return id === "new_item"

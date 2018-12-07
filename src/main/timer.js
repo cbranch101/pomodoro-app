@@ -56,7 +56,7 @@ const getTimerHandler = onTick => {
     }
 }
 
-const getMessageMap = ({ trayIcon, sendResponse }) => {
+const getMessageMap = ({ trayIcon, sendResponse, collections }) => {
     const timerHandler = getTimerHandler((timerName, { remaining: secondsRemaining }) => {
         updateTrayIconWithSecondsRemaining(trayIcon, secondsRemaining)
     })
@@ -70,13 +70,17 @@ const getMessageMap = ({ trayIcon, sendResponse }) => {
             }
         })
     return {
-        startPom: () => {
-            timerHandler.startFor("pom", 10).then(response => {
-                emptyTrayIcon(trayIcon)
-                sendTimerResponse({
-                    type: "startPom",
-                    payload: response
-                })
+        startPom: async ({ taskId }) => {
+            const response = await timerHandler.startFor("pom", 5)
+            emptyTrayIcon(trayIcon)
+            const newItem = await collections.poms.insert({
+                completed: response.isCompleted,
+                duration: response.count,
+                taskId
+            })
+            sendTimerResponse({
+                type: "startPom",
+                payload: Object.assign({}, response, { pom: newItem })
             })
         },
         startBreak: () => {

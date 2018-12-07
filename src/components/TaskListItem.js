@@ -103,9 +103,11 @@ class TaskListItem extends React.Component {
                         </button>
                     )}
                 </EstimateSection>
-                <ActionButton onClick={() => (editing ? this.handleSave() : edit(task.id))}>
-                    {editing ? "Save" : "Edit"}
-                </ActionButton>
+                {this.props.canEdit && (
+                    <ActionButton onClick={() => (editing ? this.handleSave() : edit(task.id))}>
+                        {editing ? "Save" : "Edit"}
+                    </ActionButton>
+                )}
                 <ActionButton onClick={() => startTask(task.id)}>Start</ActionButton>
             </ListItem>
         )
@@ -113,6 +115,7 @@ class TaskListItem extends React.Component {
 }
 
 TaskListItem.propTypes = {
+    canEdit: PropTypes.bool.isRequired,
     edit: PropTypes.func.isRequired,
     save: PropTypes.func.isRequired,
     startTask: PropTypes.func.isRequired,

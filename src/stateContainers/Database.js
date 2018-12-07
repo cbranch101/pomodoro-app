@@ -60,6 +60,24 @@ class Database extends Container {
         })
     }
 
+    addPomToTasks = newPom => {
+        this.modifyDataKey("tasks", state => {
+            const updatedTasks = state.data.map(task => {
+                if (task.id !== newPom.taskId) {
+                    return task
+                }
+                return {
+                    ...task,
+                    poms: [...task.poms, newPom]
+                }
+            })
+            return {
+                ...state,
+                data: updatedTasks
+            }
+        })
+    }
+
     fetchTasks = () => this.fetch("tasks")
     updateTask = (id, fields) => this.update("tasks", id, fields)
     insertTask = newItem => this.insert("tasks", newItem)
