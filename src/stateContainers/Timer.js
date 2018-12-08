@@ -2,11 +2,9 @@ import { Container } from "unstated"
 
 class Timer extends Container {
     api = null
-    database = null
     constructor(props) {
         super(props)
         this.api = props.api
-        this.database = props.database
     }
     sendTimerMessage = async (type, payload = {}) => {
         const response = await this.api.sendMessage({

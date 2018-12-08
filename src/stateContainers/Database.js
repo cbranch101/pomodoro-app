@@ -6,6 +6,7 @@ class Database extends Container {
         super(props)
         this.api = props.api
         this.fetchTasks()
+        this.fetchSummary()
     }
 
     sendMessage = async (key, method, ...args) => {
@@ -30,17 +31,23 @@ class Database extends Container {
         })
     }
 
-    fetch = async (key, query = items => items) => {
-        this.modifyDataKey(key, { data: null, loading: true })
-        const data = await this.sendMessage(key, "find", query)
-        this.modifyDataKey(key, { data, loading: false })
+    fetch = async (key, query = items => items, method = "find", storageKey) => {
+        const finalStorageKey = storageKey || key
+        this.modifyDataKey(finalStorageKey, { data: null, loading: true })
+        const data = await this.sendMessage(key, method, query)
+        this.modifyDataKey(finalStorageKey, { data, loading: false })
     }
 
     update = async (key, id, fields) => {
         const updatedItem = await this.sendMessage(key, "update", id, fields)
         this.modifyDataKey(key, state => {
             const updatedItems = state.data.map(item =>
-                item.id === updatedItem.id ? updatedItem : item
+                item.id === updatedItem.id
+                    ? {
+                        ...item,
+                        ...updatedItem
+                    }
+                    : item
             )
             return {
                 ...state,
@@ -79,6 +86,7 @@ class Database extends Container {
     }
 
     fetchTasks = () => this.fetch("tasks")
+    fetchSummary = () => this.fetch("poms", undefined, "getSummary", "pomSummary")
     updateTask = (id, fields) => this.update("tasks", id, fields)
     insertTask = newItem => this.insert("tasks", newItem)
 

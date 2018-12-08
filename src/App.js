@@ -4,6 +4,8 @@ import { Subscribe } from "unstated"
 import ActivePom from "./components/ActivePom"
 import Task from "./stateContainers/Task"
 import TaskList from "./components/TaskList"
+import TaskOverview from "./components/TaskOverview"
+import Summary from "./components/Summary"
 import TaskListData from "./components/TaskListData"
 
 class App extends Component {
@@ -24,11 +26,13 @@ class App extends Component {
                                     return <ActivePom task={task} backToTaskList={stopWorking} />
                                 }
                                 return (
-                                    <TaskList
-                                        startTask={startTask}
-                                        tasks={tasks}
-                                        updateTask={updateTask}
-                                        insertTask={insertTask}
+                                    <TaskOverview
+                                        renderSummary={() => {
+                                            return <Summary />
+                                        }}
+                                        renderTaskList={() => {
+                                            return <TaskList startTask={startTask} />
+                                        }}
                                     />
                                 )
                             }}

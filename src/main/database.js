@@ -1,4 +1,5 @@
 const { getMockCollection } = require("./get-mock-collection")
+const moment = require("moment")
 
 const collectionMap = {
     tasks: [
@@ -19,6 +20,27 @@ const collectionMap = {
         {
             id: "one",
             taskId: "two",
+            createdAt: moment()
+                .subtract(4, "hours")
+                .unix(),
+            duration: 100,
+            completed: false
+        },
+        {
+            id: "two",
+            taskId: "two",
+            createdAt: moment()
+                .subtract(5, "hours")
+                .unix(),
+            duration: 100,
+            completed: false
+        },
+        {
+            id: "three",
+            taskId: "two",
+            createdAt: moment()
+                .subtract(2, "days")
+                .unix(),
             duration: 100,
             completed: false
         }
@@ -50,13 +72,35 @@ const processMap = {
             )
         }
     },
-    poms: {}
+    poms: {
+        getSummary: async (undefined, collections) => {
+            const poms = await collections.poms.find()
+            const pomsForToday = poms.filter(pom => {
+                return moment().diff(moment.unix(pom.createdAt), "days") === 0
+            })
+            console.log(pomsForToday)
+            const summaryForToday = pomsForToday.reduce(
+                (memo, pom) => {
+                    memo.totalDuration += pom.duration
+                    return memo
+                },
+                { totalDuration: 0 }
+            )
+            return Object.assign({}, summaryForToday, {
+                totalPoms: pomsForToday.length
+            })
+        }
+    }
 }
 
 const getMessageHandler = ({ sendResponse, collections }) => async (type, payload) => {
     const [collectionName, method] = type.split("__")
-    const response = await collections[collectionName][method](...payload)
-    const updater = processMap[collectionName][method] || Promise.resolve(response)
+    const collectionMethod = collections[collectionName][method]
+    const responsePromise = collectionMethod
+        ? collections[collectionName][method](...payload)
+        : Promise.resolve(undefined)
+    const response = await responsePromise
+    const updater = processMap[collectionName][method] || (() => Promise.resolve(response))
     const updatedResponse = await updater(response, collections)
     sendResponse({
         name: "database",

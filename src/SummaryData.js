@@ -4,25 +4,25 @@ import { Subscribe } from "unstated"
 import PropTypes from "prop-types"
 import Database from "./stateContainers/Database"
 
-class TasksData extends React.Component {
+class SummaryData extends React.Component {
     render() {
         const { renderLoading = () => <div>Loading</div>, render } = this.props
         return (
             <Subscribe to={[Database]}>
                 {database => {
-                    const { tasks } = database.state
-                    return tasks.loading
+                    const { pomSummary } = database.state
+                    return pomSummary.loading
                         ? renderLoading()
-                        : render({ tasks: tasks.data, fetchTasks: database.fetchTasks })
+                        : render({ summary: pomSummary.data, fetchSummary: database.fetchSummary })
                 }}
             </Subscribe>
         )
     }
 }
 
-TasksData.propTypes = {
+SummaryData.propTypes = {
     render: PropTypes.func.isRequired,
     renderLoading: PropTypes.func
 }
 
-export default TasksData
+export default SummaryData

@@ -35,7 +35,16 @@ class TaskList extends React.Component {
                     const { editedItemId } = this.state
                     const tasksWithNewItem =
                         editedItemId === "new_item"
-                            ? [{ id: "new_item", estimatedPoms: 1, name: "Task Name" }, ...tasks]
+                            ? [
+                                {
+                                    id: "new_item",
+                                    estimatedPoms: 1,
+                                    name: "Task Name",
+                                    poms: [],
+                                    completed: false
+                                },
+                                ...tasks
+                            ]
                             : tasks
                     return (
                         <div>
@@ -49,6 +58,10 @@ class TaskList extends React.Component {
                                         startTask={startTask}
                                         edit={this.startEditingItem}
                                         canEdit={task.poms.length === 0}
+                                        canStart={
+                                            task.completed === false &&
+                                            task.id !== this.state.editedItemId
+                                        }
                                         save={(id, fields) => {
                                             this.stopEditingItem()
                                             return id === "new_item"

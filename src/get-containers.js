@@ -6,8 +6,7 @@ export default api => {
         api
     })
     const timer = new Timer({
-        api,
-        database
+        api
     })
 
     return [timer, database]

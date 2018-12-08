@@ -108,7 +108,9 @@ class TaskListItem extends React.Component {
                         {editing ? "Save" : "Edit"}
                     </ActionButton>
                 )}
-                <ActionButton onClick={() => startTask(task.id)}>Start</ActionButton>
+                {this.props.canStart && (
+                    <ActionButton onClick={() => startTask(task.id)}>Start</ActionButton>
+                )}
             </ListItem>
         )
     }
@@ -116,6 +118,7 @@ class TaskListItem extends React.Component {
 
 TaskListItem.propTypes = {
     canEdit: PropTypes.bool.isRequired,
+    canStart: PropTypes.bool.isRequired,
     edit: PropTypes.func.isRequired,
     save: PropTypes.func.isRequired,
     startTask: PropTypes.func.isRequired,

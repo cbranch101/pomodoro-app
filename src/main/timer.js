@@ -1,4 +1,5 @@
 const { updateTrayIconWithSecondsRemaining, emptyTrayIcon } = require("./tray-icon.js")
+const moment = require("moment")
 
 const getDeferred = () => {
     const deferred = {}
@@ -76,6 +77,7 @@ const getMessageMap = ({ trayIcon, sendResponse, collections }) => {
             const newItem = await collections.poms.insert({
                 completed: response.isCompleted,
                 duration: response.count,
+                createdAt: moment().unix(),
                 taskId
             })
             sendTimerResponse({
