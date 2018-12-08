@@ -78,7 +78,6 @@ const processMap = {
             const pomsForToday = poms.filter(pom => {
                 return moment().diff(moment.unix(pom.createdAt), "days") === 0
             })
-            console.log(pomsForToday)
             const summaryForToday = pomsForToday.reduce(
                 (memo, pom) => {
                     memo.totalDuration += pom.duration
