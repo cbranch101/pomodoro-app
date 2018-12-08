@@ -1,9 +1,9 @@
 import React, { Component } from "react"
-import TaskOverview from "./components/TaskOverview"
+import WorkDay from "./components/WorkDay"
 
 class App extends Component {
     render() {
-        return <TaskOverview />
+        return <WorkDay />
     }
 }
 

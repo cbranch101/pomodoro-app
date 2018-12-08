@@ -1,5 +1,5 @@
 import React from "react"
-import SummaryData from "../SummaryData"
+import SummaryData from "./SummaryData"
 
 const Summary = () => {
     return (

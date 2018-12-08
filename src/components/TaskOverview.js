@@ -8,7 +8,6 @@ import ActivePom from "./ActivePom"
 
 class TaskOverview extends React.Component {
     state = {
-        activeTaskId: null,
         editedTaskId: null
     }
     startCreatingNew = () => {
@@ -26,20 +25,15 @@ class TaskOverview extends React.Component {
             editedTaskId: null
         })
     }
-    startWorking = taskId => {
-        this.setState({ activeTaskId: taskId })
-    }
-    stopWorking = () => {
-        this.setState({ activeTaskId: null })
-    }
     render() {
+        const { onClickStartTask, onClickBackToList, activeTaskId } = this.props
         return (
             <TaskListData
                 render={({ tasks, insertTask, updateTask }) => {
-                    const { editedTaskId, activeTaskId } = this.state
+                    const { editedTaskId } = this.state
                     const activeTask = activeTaskId && tasks.find(task => task.id === activeTaskId)
                     if (activeTask) {
-                        return <ActivePom task={activeTask} backToTaskList={this.stopWorking} />
+                        return <ActivePom task={activeTask} backToTaskList={onClickBackToList} />
                     }
 
                     const tasksWithNewItem =
@@ -66,7 +60,7 @@ class TaskOverview extends React.Component {
                                         <TaskListItem
                                             key={task.id}
                                             editing={task.id === this.state.editedTaskId}
-                                            startTask={this.startWorking}
+                                            startTask={onClickStartTask}
                                             edit={this.startEditingTask}
                                             canEdit={task.poms.length === 0}
                                             canStart={
@@ -90,6 +84,12 @@ class TaskOverview extends React.Component {
             />
         )
     }
+}
+
+TaskOverview.propTypes = {
+    onClickStartTask: PropTypes.func.isRequired,
+    onClickBackToList: PropTypes.func.isRequired,
+    activeTaskId: PropTypes.string
 }
 
 export default TaskOverview
