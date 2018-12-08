@@ -2,19 +2,26 @@ import React from "react"
 import PropTypes from "prop-types"
 import { Subscribe } from "unstated"
 import Database from "../stateContainers/Database"
+import Task from "../stateContainers/Task"
 
 class TaskListData extends React.Component {
     render() {
         const { render } = this.props
         return (
             <Subscribe to={[Database]}>
-                {({ state: { tasks }, ...methods }) => {
+                {database => {
+                    const {
+                        state: { tasks },
+                        ...databaseMethods
+                    } = database
+
                     if (tasks.loading) {
                         return <div>Loading</div>
                     }
+
                     return render({
                         tasks: tasks.data,
-                        ...methods
+                        ...databaseMethods
                     })
                 }}
             </Subscribe>

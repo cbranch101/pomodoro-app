@@ -2,6 +2,18 @@ const { getMockCollection } = require("./get-mock-collection")
 const moment = require("moment")
 
 const collectionMap = {
+    days: [
+        {
+            id: "one",
+            createdAt: moment().subtract(1, "days"),
+            isActive: false,
+            stoppedAt: moment()
+                .subtract(1, "days")
+                .add(2, "hours"),
+            untrackedTime: 1000,
+            planningTime: 1000
+        }
+    ],
     tasks: [
         {
             id: "one",
@@ -73,7 +85,7 @@ const processMap = {
         }
     },
     poms: {
-        getSummary: async (undefined, collections) => {
+        getSummary: async (repsonse, collections) => {
             const poms = await collections.poms.find()
             const pomsForToday = poms.filter(pom => {
                 return moment().diff(moment.unix(pom.createdAt), "days") === 0

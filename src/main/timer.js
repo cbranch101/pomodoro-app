@@ -13,6 +13,7 @@ const getDeferred = () => {
 const getTimerHandler = onTick => {
     const timers = {}
     const stop = (timerName, isCompleted = false) => {
+        console.log(timers)
         const currentTimer = timers[timerName]
         if (currentTimer) {
             const { handler, deferred, count } = currentTimer
@@ -73,6 +74,9 @@ const getMessageMap = ({ trayIcon, sendResponse, collections }) => {
     return {
         startPom: async ({ taskId }) => {
             const response = await timerHandler.startFor("pom", 5)
+            timerHandler.start("untracked").then(duration => {
+                console.log(duration)
+            })
             emptyTrayIcon(trayIcon)
             const newItem = await collections.poms.insert({
                 completed: response.isCompleted,
@@ -86,6 +90,7 @@ const getMessageMap = ({ trayIcon, sendResponse, collections }) => {
             })
         },
         startBreak: () => {
+            timerHandler.stop("untracked")
             timerHandler.startFor("break", 5).then(response => {
                 emptyTrayIcon(trayIcon)
                 sendTimerResponse({
@@ -94,7 +99,7 @@ const getMessageMap = ({ trayIcon, sendResponse, collections }) => {
                 })
             })
         },
-        stopPom: () => {
+        stopPom: async () => {
             timerHandler.stop("pom")
         },
         stopBreak: () => {
