@@ -2,16 +2,35 @@ const { getMockCollection } = require("./get-mock-collection")
 const moment = require("moment")
 
 const collectionMap = {
+    sessions: [
+        {
+            id: "one",
+            createdAt: moment()
+                .subtract(1, "hours")
+                .unix(),
+            type: "untracked",
+            duration: 500
+        },
+        {
+            id: "two",
+            createdAt: moment()
+                .subtract(1, "hours")
+                .unix(),
+            type: "planning",
+            duration: 500
+        }
+    ],
     days: [
         {
             id: "one",
-            createdAt: moment().subtract(1, "days"),
+            createdAt: moment()
+                .subtract(1, "hours")
+                .unix(),
             isActive: false,
             stoppedAt: moment()
                 .subtract(1, "days")
-                .add(2, "hours"),
-            untrackedTime: 1000,
-            planningTime: 1000
+                .add(2, "hours")
+                .unix()
         }
     ],
     tasks: [
@@ -66,6 +85,12 @@ const getCollections = () => {
     }, {})
 }
 
+const filterForToday = items => {
+    return items.filter(item => {
+        return moment().diff(moment.unix(item.createdAt), "days") === 0
+    })
+}
+
 const processMap = {
     tasks: {
         find: async (tasks, collections) => {
@@ -86,22 +111,36 @@ const processMap = {
     },
     poms: {
         getSummary: async (repsonse, collections) => {
-            const poms = await collections.poms.find()
-            const pomsForToday = poms.filter(pom => {
-                return moment().diff(moment.unix(pom.createdAt), "days") === 0
-            })
-            const summaryForToday = pomsForToday.reduce(
+            const [poms, sessions] = await Promise.all([
+                collections.poms.find(),
+                collections.sessions.find()
+            ])
+
+            const pomsForToday = filterForToday(poms)
+            const sessionsForToday = filterForToday(sessions)
+            const sessionSummaryForToday = sessionsForToday.reduce(
+                (memo, session) => {
+                    memo[`${session.type}Time`] += session.duration
+                    return memo
+                },
+                {
+                    planningTime: 0,
+                    untrackedTime: 0
+                }
+            )
+            const pomSummaryForToday = pomsForToday.reduce(
                 (memo, pom) => {
                     memo.totalDuration += pom.duration
                     return memo
                 },
                 { totalDuration: 0 }
             )
-            return Object.assign({}, summaryForToday, {
+            return Object.assign({}, pomSummaryForToday, sessionSummaryForToday, {
                 totalPoms: pomsForToday.length
             })
         }
-    }
+    },
+    days: {}
 }
 
 const getMessageHandler = ({ sendResponse, collections }) => async (type, payload) => {

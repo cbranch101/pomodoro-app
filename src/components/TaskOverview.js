@@ -26,7 +26,7 @@ class TaskOverview extends React.Component {
         })
     }
     render() {
-        const { onClickStartTask, onClickBackToList, activeTaskId } = this.props
+        const { onClickStartTask, onClickBackToList, activeTaskId, renderSummary } = this.props
         return (
             <TaskListData
                 render={({ tasks, insertTask, updateTask }) => {
@@ -51,7 +51,7 @@ class TaskOverview extends React.Component {
                             : tasks
                     return (
                         <div>
-                            <Summary />
+                            {renderSummary()}
                             <TaskList
                                 onClickNew={this.startCreatingNew}
                                 tasks={tasksWithNewItem}

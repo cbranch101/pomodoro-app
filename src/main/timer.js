@@ -13,7 +13,6 @@ const getDeferred = () => {
 const getTimerHandler = onTick => {
     const timers = {}
     const stop = (timerName, isCompleted = false) => {
-        console.log(timers)
         const currentTimer = timers[timerName]
         if (currentTimer) {
             const { handler, deferred, count } = currentTimer
@@ -59,8 +58,14 @@ const getTimerHandler = onTick => {
 }
 
 const getMessageMap = ({ trayIcon, sendResponse, collections }) => {
-    const timerHandler = getTimerHandler((timerName, { remaining: secondsRemaining }) => {
-        updateTrayIconWithSecondsRemaining(trayIcon, secondsRemaining)
+    const timerHandler = getTimerHandler((timerName, returnValue) => {
+        if (timerName === "pom" || timerName === "break") {
+            const { remaining: secondsRemaining } = returnValue
+            updateTrayIconWithSecondsRemaining(trayIcon, secondsRemaining)
+        }
+        if (timerName === "untracked") {
+            updateTrayIconWithSecondsRemaining(trayIcon, returnValue, true)
+        }
     })
 
     const sendTimerResponse = ({ type, payload }) =>
@@ -71,12 +76,20 @@ const getMessageMap = ({ trayIcon, sendResponse, collections }) => {
                 payload
             }
         })
+
+    const recordSession = async type => {
+        const duration = await timerHandler.start("untracked", undefined)
+        const session = await collections.sessions.insert({
+            createdAt: moment.unix(),
+            type,
+            duration
+        })
+        return session
+    }
+
     return {
         startPom: async ({ taskId }) => {
             const response = await timerHandler.startFor("pom", 5)
-            timerHandler.start("untracked").then(duration => {
-                console.log(duration)
-            })
             emptyTrayIcon(trayIcon)
             const newItem = await collections.poms.insert({
                 completed: response.isCompleted,
@@ -89,17 +102,25 @@ const getMessageMap = ({ trayIcon, sendResponse, collections }) => {
                 payload: Object.assign({}, response, { pom: newItem })
             })
         },
-        startBreak: () => {
-            timerHandler.stop("untracked")
-            timerHandler.startFor("break", 5).then(response => {
-                emptyTrayIcon(trayIcon)
-                sendTimerResponse({
-                    type: "startBreak",
-                    payload: response
-                })
+        startBreak: async () => {
+            const response = await timerHandler.startFor("break", 5)
+            emptyTrayIcon(trayIcon)
+            sendTimerResponse({
+                type: "startBreak",
+                payload: response
             })
         },
-        stopPom: async () => {
+        stopSession: ({ type }) => {
+            timerHandler.stop(type)
+        },
+        startSession: async ({ type }) => {
+            const session = await recordSession(type)
+            sendTimerResponse({
+                type: "startSession",
+                payload: session
+            })
+        },
+        stopPom: () => {
             timerHandler.stop("pom")
         },
         stopBreak: () => {

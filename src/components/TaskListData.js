@@ -2,7 +2,6 @@ import React from "react"
 import PropTypes from "prop-types"
 import { Subscribe } from "unstated"
 import Database from "../stateContainers/Database"
-import Task from "../stateContainers/Task"
 
 class TaskListData extends React.Component {
     render() {

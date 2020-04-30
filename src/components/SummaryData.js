@@ -2,7 +2,7 @@ import React from "react"
 
 import { Subscribe } from "unstated"
 import PropTypes from "prop-types"
-import Database from "./stateContainers/Database"
+import Database from "../stateContainers/Database"
 
 class SummaryData extends React.Component {
     render() {

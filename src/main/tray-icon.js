@@ -9,8 +9,9 @@ const getTimeString = seconds => {
     return `${stringPadLeft(minutes, "0", 2)}:${stringPadLeft(secondsInMinute, "0", 2)}`
 }
 
-const updateTrayIconWithSecondsRemaining = (trayIcon, remainingSeconds) => {
-    trayIcon.setTitle(getTimeString(remainingSeconds))
+const updateTrayIconWithSecondsRemaining = (trayIcon, remainingSeconds, showPositive = false) => {
+    const timeString = getTimeString(remainingSeconds)
+    trayIcon.setTitle(`${showPositive ? "+" : ""}${timeString}`)
 }
 
 const emptyTrayIcon = trayIcon => {

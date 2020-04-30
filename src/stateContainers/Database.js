@@ -1,4 +1,5 @@
 import { Container } from "unstated"
+import moment from "moment"
 
 class Database extends Container {
     api = null
@@ -7,6 +8,7 @@ class Database extends Container {
         this.api = props.api
         this.fetchTasks()
         this.fetchSummary()
+        this.fetchCurrentDay()
     }
 
     sendMessage = async (key, method, ...args) => {
@@ -36,6 +38,7 @@ class Database extends Container {
         this.modifyDataKey(finalStorageKey, { data: null, loading: true })
         const data = await this.sendMessage(key, method, query)
         this.modifyDataKey(finalStorageKey, { data, loading: false })
+        return data
     }
 
     update = async (key, id, fields) => {
@@ -54,6 +57,7 @@ class Database extends Container {
                 data: updatedItems
             }
         })
+        return updatedItem
     }
 
     insert = async (key, newItem) => {
@@ -65,6 +69,7 @@ class Database extends Container {
                 data: updatedItems
             }
         })
+        return createdItem
     }
 
     addPomToTasks = newPom => {
@@ -84,11 +89,19 @@ class Database extends Container {
             }
         })
     }
+    filterToCurrentDay = days => {
+        return days.filter(day => {
+            return moment.unix(day.createdAt).diff(moment(), "days") === 0
+        })
+    }
 
     fetchTasks = () => this.fetch("tasks")
     fetchSummary = () => this.fetch("poms", undefined, "getSummary", "pomSummary")
+    fetchCurrentDay = () => this.fetch("days", this.filterToCurrentDay)
+
     updateTask = (id, fields) => this.update("tasks", id, fields)
     insertTask = newItem => this.insert("tasks", newItem)
+    insertDay = newItem => this.insert("days", newItem)
 
     state = {
         tasks: {
